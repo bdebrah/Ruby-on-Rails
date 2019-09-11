@@ -1,0 +1,20 @@
+<% provide(:title, "Chargers") %>
+<%= form_tag products_chargers_path, :method => 'get', :id => "products_chargers_search" do %>
+<div class="container" style="text-align: center;">
+    <div class="center-block" style="display: inline-block; width: 100%; font-size: 15px; float: none; margin: 0 auto; font-family:'Spectral', serif;">
+      <%= text_field_tag :search, params[:search], :size => 50 %>
+      <%= submit_tag "Search", :name => nil, class:"btn btn-primary" %>
+    </div>
+</div>
+<% end %>
+<br><br>
+<%= form_tag products_chargers_path, :method => 'get', :id => "products_chargers_search" do %>
+<div class="container" style="text-align: center;">
+    <div class="center-block" style="display: inline-block; width: 100%; font-size: 15px; float: none; margin: 0 auto; font-family:'Spectral', serif;">
+      Filter by Price: <%= number_field_tag :from, 0, :required => 'required' %>
+      - <%= number_field_tag :to, 9999, :required => 'required' %>
+      <%= submit_tag "Filter", :name => nil, class:"btn btn-primary" %>
+    </div>
+</div>
+<% end %>
+<%= render partial: 'item', locals: {hold: @chargers} %>

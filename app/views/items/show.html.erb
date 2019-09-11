@@ -1,0 +1,92 @@
+<% provide(:title, @item.name) %>
+<div class="container-fluid" style="font-family: 'Spectral', serif">
+  <div class="row">
+    <div class="col-sm-8"><%= image_tag(@item.picture.url(:medium), {:class => "center-block show-img"}) %></div>
+    <div class="col-sm-4">
+    	<div class="product-title"style="font-size: 30px"><%= @item.name %></div>
+			<div class="product-desc" style="font-size: 20px">
+				<%= @item.description %>
+			</div>
+			<hr>
+			<div class="product-price" style="font-size: 50px">
+				<%= number_with_precision(@item.price, precision: 2) %>$
+			</div>
+			<br>
+			<div>
+				<%= form_for Quantity.new, :html => {:id => "quantity"} do |form| %>
+					<h4>Quantity:</h4>
+					<%= form.select :quantity, [1,2,3,4,5,7,8,9,10] %>
+					<% if current_user %>
+						<%= link_to 'Add to cart', '#', :onclick => "$('#quantity').submit()", class: "btn btn-success actions" %>
+						<%= form.hidden_field :item_id, :value => @item.id %>
+						<%= form.hidden_field :user_id, :value => current_user.id %>
+					<% else %>
+						<%= link_to '<button type="button" class="btn btn-success">Add to cart</button>'.html_safe,
+                          :controller => "sessions", :action => "new" %>
+					<% end %>		
+				<% end %>
+			</div>
+				<div class="star-ratings-css">
+  				<div class="star-ratings-css-top" style="width: <%= @item.average(@item)*20 %>%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+  				<div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+			</div>
+			<br><div style="font-size: 20px">Ratings: <%= @item.average(@item) %></div>
+			<br><div style="font-size: 20px">Reviews for this item:
+			<% @reviewss = Review.where(:item_id => @item.id) %>
+			<% if @reviewss.empty? %>
+				<div style="font-size: 20px">There is no reviews for this item yet</div>
+			<% else %>
+				<table class="table">
+					<% Review.where(:item_id => @item.id).each do |review| %>
+						<tr>
+							<td>
+								User <b><%= review.user.username %></b> rates this 
+								<% if Rating.where(:item_id => @item.id, :user_id => review.user.id).pluck(:ratings)[0] %>
+									<%= "★" * Rating.where(:item_id => @item.id, :user_id => review.user.id).pluck(:ratings)[0] %>:<br>
+								<% else %>
+									:
+								<% end %>
+								<br>
+								<%= review.content %>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+				</div>
+			<% end %>	
+			<% if current_user %>
+				<% @rate = Rating.where(:item_id => @item.id, :user_id => current_user.id) %>
+				<% if @rate.blank? %>
+					<%= form_for Rating.new, :html => {:id => "rate"} do |form| %>
+						<br><b style="font-size: 20px">Rate it now!</b>
+						<%= form.select :ratings, [1,2,3,4,5] %>
+						<%= link_to 'Rate this product', '#', :onclick => "$('#rate').submit()", class: "btn btn-warning actions" %>
+						<%= form.hidden_field :item_id, :value => @item.id %>
+						<%= form.hidden_field :user_id, :value => current_user.id %>
+					<% end %>
+				<% else %>
+					<br><br>
+		  			<p style="font-size: 20px"> Your rating of this product: <%= @rate.pluck(:ratings)[0] %><p>
+				<% end %>
+			<% else %>
+				<br><%= link_to 'Login to rate and write a review for this item', :controller => "sessions", :action => "new" %>
+			<% end %>
+			<% if current_user %>
+				<% @review = Review.where(:item_id => @item.id, :user_id => current_user.id) %>
+				<% if @review.blank? %>
+					<%= form_for Review.new, :html => {:id => "review"} do |form| %>
+						<b style="font-size: 20px">Review this item</b><br>
+						<%= form.text_area :content %>
+						<%= link_to 'Submit review', '#', :onclick => "$('#review').submit()", class: "actions" %>
+						<%= form.hidden_field :item_id, :value => @item.id %>
+						<%= form.hidden_field :user_id, :value => current_user.id %>
+					<% end %>
+				<% else %>
+		  			<p style="font-size: 20px"> Your review of this product: <br> <%= @review.pluck(:content)[0] %><p>
+				<% end %>
+			<% end %>
+		</div>
+  </div>
+</div>
+</body>
+</html>

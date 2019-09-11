@@ -1,0 +1,40 @@
+<nav class="navbar navbar-inverse navbar-static-top navbar-fixed-top clr"> 
+   <div class="container-fluid">
+      <div class="navbar-header">
+         <a class="navbar-brand headerstyle" style="font-family:'Ceviche One'; font-size:30px;">MobileShack</a>
+      </div>
+      
+      <ul class="nav navbar-nav navbar-right headerstyle">
+         <li><%= link_to "Home", :controller => "navbar", :action => "home"%></li>
+         <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Products
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu headerstyle">
+               <li><%= link_to "Phones", :controller => "products", :action => "phones" %></li>
+               <li><%= link_to "Headphones", :controller => "products", :action => "headphones" %></li>
+               <li><%= link_to "Chargers", :controller => "products", :action => "chargers" %></li>
+            </ul>
+         </li>
+         <li><%= link_to "Contact", :controller => "navbar", :action => "contact" %></li>
+         <% if current_user %>
+           <li><%= link_to "Welcome " + current_user.username + " (View your cart)", :controller => "navbar", :action => "cart" %></li>
+           <li><%= link_to "Log Out", logout_path %></li>
+         <% else %>
+            <li>  
+               <%= link_to :controller => "users", :action => "new" do %>
+                  <span class="glyphicon glyphicon-user"></span> Sign Up
+               <% end %>
+            </li>
+            <li>  
+               <%= link_to :controller => "sessions", :action => "new" do %>
+                  <span class="glyphicon glyphicon-log-in"></span> Login
+               <% end %>
+            </li>
+         <% end %>
+      </ul>
+   </div>
+</nav>
+
+  </div>
+</div>
+<br><br><br><br><br><br><br><br><br>

@@ -1,0 +1,14 @@
+<div class="container">
+    <% hold.each_slice(3) do |row| %>
+        <div class="row-eq-height">
+            <% row.each do |item| %>
+                <%= link_to item, {:class => "col-sm-4 card", :style => "text-decoration:none"} do %>
+                    <%= image_tag(item.picture.url(:medium), :class => "card-img center-block") %>
+                    <h3 class="card_content"style="color: #941C38; font-family:'Spectral', serif;"><center><%= item.name %></center></h3>
+                    <p class="card_content" style="text-align: right; font-family:'Spectral', serif;"><%= number_with_precision(item.price, precision: 2) %>$</p>
+                    <p class="card_content" style=font-family:'Spectral',serif><%= item.description %></p>
+                <% end %>
+            <% end %>
+        </div>
+    <% end %>
+</div><br>
